@@ -1,0 +1,30 @@
+{
+  "name": "URL-Blocker",
+  "manifest_version": 2,
+  "version": "0.9.0",
+  "description": "Block the URLs by specified pattern.",
+  "browser_action": {
+    "default_icon": "images/icon.png",
+    "default_title": "URL-Blocker",
+    "default_popup": "html/popup.html"
+  },
+  "icons": {
+    "128": "images/icon_128.png"
+  },
+  "permissions": [
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "*://*/*"
+  ],
+  "content_scripts": [
+    {"js":["js/content-script.js"], "matches": ["file:///*"]},
+    {"js":["js/local-file-log.js"], "matches": ["file:///*"]},
+    {"js":["js/content-script.js"], "matches": ["*://*/*"]},
+    {"js":["js/local-file-log.js"], "matches": ["*://*/*"]}
+  ],
+  "background": {
+    "page": "html/background.html"
+  },
+  "options_page": "html/options.html"
+}
