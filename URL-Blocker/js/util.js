@@ -20,3 +20,5 @@ function logExit(name) {
     var log = "===============EXIT(" + name + ")=================";
     console.log(log);
 }
+
+// test code
