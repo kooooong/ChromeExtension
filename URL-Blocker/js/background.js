@@ -1,5 +1,7 @@
 ﻿/* global chrome */
 var blockUrls = [
+    // cnzz
+    "://*.cnzz.com/*",
     "://afptrack.alimama.com/",
     "://afpeng.alimama.com/",
     "http://spdeliver.i-mobile.co.jp/script/ads.js",
