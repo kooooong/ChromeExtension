@@ -1,0 +1,25 @@
+li.url-item {
+    display: flex;
+    margin: 5px 0;
+}
+
+div.url-item-text {
+    display: inline-block;
+    flex: 1;
+}
+
+div.url-item-delete {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background-color: #dbdbdb;
+}
+
+div#urlListDiv {
+    overflow: auto;
+    height: 600px;
+    width: 1200px;
+}
+

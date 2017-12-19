@@ -1,6 +1,6 @@
 ﻿
 (function () {
-	var $ = function (id) { return document.getElementById(id); };
+	// var $ = function (id) { return document.getElementById(id); };
 	var Tasks = {
 		show: function (obj) {
 			obj.className = '';
@@ -11,10 +11,10 @@
 			return this;
 		},
 		//存储dom
-		$addItemDiv: $('addItemDiv'),
-		$addItemInput: $('addItemInput'),
-		$txtTaskTitle: $('txtTaskTitle'),
-		$taskItemList: $('taskItemList'),
+		$addItemDiv: $('#addItemDiv')[0],
+		$addItemInput: $('#addItemInput')[0],
+		$txtTaskTitle: $('#txtTaskTitle')[0],
+		$taskItemList: $('#taskItemList')[0],
 		//指针
 		index: window.localStorage.getItem('Tasks:index'),
 		//初始化
@@ -54,13 +54,15 @@
 			if (window.localStorage.length - 1) {
 				var task_list = [];
 				var key;
-				for (var i = 0, len = window.localStorage.length; i < len; i++) {
+				var i;
+				var len;
+				for (i = 0, len = window.localStorage.length; i < len; i++) {
 					key = window.localStorage.key(i);
 					if (/task:\d+/.test(key)) {
 						task_list.push(JSON.parse(window.localStorage.getItem(key)));
 					}
 				}
-				for (var i = 0, len = task_list.length; i < len; i++) {
+				for (i = 0, len = task_list.length; i < len; i++) {
 					Tasks.AppendHtml(task_list[i]);
 				}
 			}
@@ -92,6 +94,7 @@
 			var oSpan = document.createElement('span');
 			oSpan.className = 'taskTitle';
 			var oText = document.createTextNode(task.task_item);
+			var lbl;
 			oSpan.appendChild(oText);
 			oDiv.appendChild(oLabel);
 			oDiv.appendChild(oSpan);
@@ -99,7 +102,7 @@
 			oDiv.addEventListener('click', function () {
 				if (!task.is_finished) {
 					task.is_finished = !task.is_finished;
-					var lbl = this.getElementsByTagName('label')[0];
+					lbl = this.getElementsByTagName('label')[0];
 					lbl.className = (lbl.className == 'on') ? 'off' : 'on';
 					Tasks.Edit(task);
 				} else {
@@ -108,7 +111,7 @@
 						Tasks.RemoveHtml(task);
 					} else {
 						task.is_finished = !task.is_finished;
-						var lbl = this.getElementsByTagName('label')[0];
+						lbl = this.getElementsByTagName('label')[0];
 						lbl.className = (lbl.className == 'on') ? 'off' : 'on';
 						Tasks.Edit(task);
 					}
@@ -126,6 +129,31 @@
 				}
 			}
 		}
-	}
+	};
 	Tasks.init();
 })();
+
+$("#tb").on("click", test);
+function getBlockStr() {
+	var url = $("#inputUrl").val();
+	var ret = "";
+	if (!url || url == "") {
+		return ret;
+	}
+	var pattern = $("#inputPattern").val();
+	if (pattern == 1) {
+		ret = "*://" + url + "*";
+	} else if (pattern == 2) {
+		ret = "*" + url + "*";
+	}
+	return ret;
+}
+
+function test() {
+	var url = getBlockStr();
+	if (!url || url == "") {
+		return;
+	}
+	var bg = chrome.extension.getBackgroundPage();
+	bg.addBlockUrl(url);
+}

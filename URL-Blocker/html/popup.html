@@ -4,15 +4,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Task List</title>
     <link rel="Stylesheet" href="../css/popup.css" />
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../js/popup.js">
-    </script>
+    <script type="text/javascript" src="../js/jquery-1.7.2.min.js" charset="utf-8"></script>
 </head>
 <body>
-    <div id="addItemDiv">添加新项</div>
-    <div id="addItemInput" class="hide">
-        <input type="text" id="txtTaskTitle" /></div>
-    <div id="taskItemList">
+    <div id="main">
+        <div id="test">
+            <label for="inputPattern">Pattern</label>
+            <select id="inputPattern">
+                <option value="1" title="Domain">Domain Name</option>
+                <option value="2" title="Keyword">Keyword Name</option>
+            </select>
+            <label for="inputUrl">URL</label><input type="text" value="url" id="inputUrl"/>
+            <input type="button" value="Test" id="tb"/>
+        </div>
+        <div id="sample">
+            <div id="addItemDiv">添加新项</div>
+            <div id="addItemInput" class="hide">
+                <label for="txtTaskTitle">Title</label><input type="text" id="txtTaskTitle" /></div>
+            <div id="taskItemList"></div>
+        </div>
     </div>
+    <script type="text/javascript" src="../js/popup.js"></script>
 </body>
 </html>

@@ -1,5 +1,8 @@
 ﻿/* global chrome */
 var blockUrls = [
+    "*://g.fastapi.net/qa*",
+    "*://g.fastapi.net/ga*",
+    "*://www.cctv.com/js/cntv_Advertise.js",
     // cnzz
     "://*.cnzz.com/*",
     "://afptrack.alimama.com/",
@@ -15,7 +18,7 @@ var blockUrls = [
     "://cpro.baidustatic.com/",
     "://cbjs.baidu.com/",
     "://p.tanx.com/",
-    "//changyan.sohu.com/",
+    "://changyan.sohu.com/",
     "://s.lianmeng.360.cn/",
     "http://dvser.china.com/s",
     "http://inte.sogou.com/ask",
@@ -122,7 +125,22 @@ var blockUrls = [
     // "*://ja.gamersky.com/www/a300_2.htm",
     "*://ja.gamersky.com/banner/new_top_allsite_970_2.js",
     "*://static.mediav.com/*",
-    "*://g.gjc3hsm.com/*"
+    "*://g.gjc3hsm.com/*",
+
+    "*/ads*",
+    "*/adCore*",
+    "*://pos.baidu.com*",
+    "*://cpro.baidustatic.com*",
+    "*://cbjs.baidu.com*",
+    "*://cb.baidu.com*",
+    "*://tpc.googlesyndication.com*",
+    "*://pagead2.googlesyndication.com*",
+    "*://googleads.g.doubleclick.net*",
+    "*://s.lianmeng.360.cn*",
+    "*://sax.sina.com.cn*",
+    "*://s3-ap-northeast-1.amazonaws.com*",
+    "*://p.tanx.com*"
+
 ];
 //http://cpro.baidustatic.com/cpro/ui/c.js
 //http://g.gjc3hsm.com/b/1/683/11397/jfd9ki.swf?uid=507969
@@ -159,35 +177,35 @@ var filterAllURL = {
 //OnResponseStartedOptions
 //OnSendHeadersOptions
 chrome.webRequest.onAuthRequired.addListener(
-    function(args) {
+    function () {
         logEnter("onAuthRequired");
         logExit("onAuthRequired");
     },
     filterAllURL
 );
 chrome.webRequest.onBeforeRedirect.addListener(
-    function(args) {
+    function () {
         logEnter("onBeforeRedirect");
         logExit("onBeforeRedirect");
     },
     filterAllURL
 );
 chrome.webRequest.onBeforeSendHeaders.addListener(
-    function(args) {
+    function () {
         logEnter("onBeforeSendHeaders");
         logExit("onBeforeSendHeaders");
     },
     filterAllURL
 );
 chrome.webRequest.onHeadersReceived.addListener(
-    function(args) {
+    function () {
         logEnter("onHeadersReceived");
         logExit("onHeadersReceived");
     },
     filterAllURL
 );
 chrome.webRequest.onSendHeaders.addListener(
-    function(args) {
+    function () {
         logEnter("onSendHeaders");
         logExit("onSendHeaders");
     },
@@ -195,6 +213,12 @@ chrome.webRequest.onSendHeaders.addListener(
 );
 
 chrome.webRequest.onBeforeRequest.addListener(
+    /**
+     *
+     * @param details.url
+     * @param details.redirectUrl
+     * @returns {*}
+     */
     function (details) {
         //var url = details.url;
         //console.log(url);
@@ -207,39 +231,27 @@ chrome.webRequest.onBeforeRequest.addListener(
         //alert("details");
         var url = details.url;
         for (var i in logUrls) {
+            if (!logUrls.hasOwnProperty(i)) {
+                continue;
+            }
             if (wildcard(logUrls[i], url)) {
                 printVar(details);
                 break;
             }
         }
-        if (url.indexOf("/ads") != -1
-            || url.indexOf("/adCore") != -1
-            || url.indexOf("pos.baidu.com") != -1
-            || url.indexOf("cpro.baidustatic.com") != -1
-            || url.indexOf("cbjs.baidu.com") != -1
-            || url.indexOf("cb.baidu.com") != -1
-            || url.indexOf("tpc.googlesyndication.com") != -1
-            || url.indexOf("pagead2.googlesyndication.com") != -1
-            || url.indexOf("googleads.g.doubleclick.net") != -1
-            || url.indexOf("s.lianmeng.360.cn") != -1
-            || url.indexOf("sax.sina.com.cn") != -1
-//            || url.indexOf("twitter.com/") != -1
-            || url.indexOf("s3-ap-northeast-1.amazonaws.com") != -1
-            || url.indexOf("p.tanx.com") != -1) {
-            return { cancel: true };
-        } /* else if (url.indexOf("jquery-migrate-1.2.1.min.js") != -1
-            || url.indexOf("jquery-1.9.1.min.js") != -1) {
-            return {redirectUrl: "https://lib.sinaapp.com/js/jquery/1.8.2/jquery.min.js"};
-        } */ else {
-            for (var k in blockUrls) {
-                if (wildcard(blockUrls[k], url)) {
-                    return { cancel: true };
-                }
+
+        for (var k in blockUrls) {
+            if (!blockUrls.hasOwnProperty(k)) {
+                continue;
+            }
+            if (wildcard(blockUrls[k], url)) {
+                return {cancel: true};
             }
         }
+
         if (details.redirectUrl != "" && details.redirectUrl != undefined && details.redirectUrl != null) {
             alert(details.redirectUrl);
-            return { cancel: true };
+            return {cancel: true};
         }
         return {};
     },
@@ -251,8 +263,10 @@ chrome.webRequest.onErrorOccurred.addListener(
         logEnter("onErrorOccurred");
         var url = details.url;
         for (var i in logUrls) {
+            if (!logUrls.hasOwnProperty(i)) {
+                continue;
+            }
             if (wildcard(logUrls[i], url)) {
-                logEnter(onErrorOccurred);
                 printVar(details);
                 break;
             }
@@ -267,6 +281,9 @@ chrome.webRequest.onCompleted.addListener(
         logEnter("onCompleted");
         var url = details.url;
         for (var i in logUrls) {
+            if (!logUrls.hasOwnProperty(i)) {
+                continue;
+            }
             if (wildcard(logUrls[i], url)) {
                 printVar(details);
                 break;
@@ -283,6 +300,9 @@ chrome.webRequest.onResponseStarted.addListener(
         logEnter("onResponseStarted");
         var url = details.url;
         for (var i in logUrls) {
+            if (!logUrls.hasOwnProperty(i)) {
+                continue;
+            }
             if (wildcard(logUrls[i], url)) {
                 printVar(details);
                 break;
@@ -296,6 +316,9 @@ chrome.webRequest.onResponseStarted.addListener(
 );
 /* in background.html */
 chrome.browserAction.onClicked.addListener(function (tab) {
+    if (!tab) {
+        return;
+    }
     chrome.tabs.executeScript(null,
         {
             code: "document.body.bgColor='red'"
@@ -326,3 +349,37 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 //        ["blocking", "requestHeaders"]
 //    );
 //}
+var BLOCK_URLS_KEY = "BlockUrls";
+function initBlockUrl() {
+    var save = localStorage.getItem(BLOCK_URLS_KEY);
+    var obj = JSON.parse(save);
+    if (!obj) {
+        return;
+    }
+    if ($.isArray(obj)) {
+        blockUrls = [];
+        blockUrls = blockUrls.concat(obj);
+    } else {
+        blockUrls = [];
+        blockUrls.push(obj);
+    }
+}
+//noinspection JSUnusedGlobalSymbols
+function addBlockUrl(url) {
+    console.log(url);
+    blockUrls.push(url);
+    var save = JSON.stringify(blockUrls);
+    localStorage.setItem(BLOCK_URLS_KEY, save);
+}
+
+function deleteUrl(url) {
+    if (!url) {
+        return;
+    }
+    var index = blockUrls.indexOf(url);
+    if (index !== -1) {
+        blockUrls.splice(index, 1);
+        localStorage.setItem(BLOCK_URLS_KEY, JSON.stringify(blockUrls));
+    }
+}
+initBlockUrl();
