@@ -10,8 +10,20 @@
 <body>
 <div style="height: 100%;width: 100%;">
     <h1>Options Page</h1>
+    <div id="filterDiv">
+        <label>Filter:&nbsp;&nbsp;&nbsp;<input type="text" name="url-filter" id="url-filter" title="filter" placeholder="Input Filter Keyword.(case insensitive)"></label>
+    </div>
     <div id="urlListDiv">
         <ul id="urlList"></ul>
+    </div>
+    <div id="operateDiv">
+        <input type="button" id="delete-selected" name="delete-selected" value="Delete Selected" title="Delete Selected Urls">
+        <input type="button" id="delete-all" name="delete-all" value="delete-all" title="delete-all">
+        <input type="button" id="select-all" name="select-all" value="select-all" title="select-all">
+        <input type="button" id="deselect-all" name="deselect-all" value="deselect-all" title="deselect-all">
+        <input type="button" id="reverse-select" name="reverse-select" value="reverse-select" title="reverse-select">
+        <input type="button" id="import" name="import" value="import" title="import">
+        <input type="button" id="export" name="export" value="export" title="export">
     </div>
 </div>
 <script type="text/javascript" src="../js/options.js"></script>

@@ -3,9 +3,13 @@ li.url-item {
     margin: 5px 0;
 }
 
-div.url-item-text {
+.url-item-label {
     display: inline-block;
     flex: 1;
+}
+
+div.url-item-text {
+    display: inline-block;
 }
 
 div.url-item-delete {
@@ -23,3 +27,6 @@ div#urlListDiv {
     width: 1200px;
 }
 
+input#url-filter {
+    width: 400px;
+}
