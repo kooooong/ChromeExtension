@@ -1,3 +1,8 @@
+html {
+    --content-width: 1200px;
+    --content-height: 800px;
+}
+
 li.url-item {
     display: flex;
     margin: 5px 0;
@@ -29,4 +34,10 @@ div#urlListDiv {
 
 input#url-filter {
     width: 400px;
+}
+
+div#contentDiv {
+    position: absolute;
+    left: calc(50% - var(--content-width)/2);
+    top: calc(50% - var(--content-height)/2);
 }

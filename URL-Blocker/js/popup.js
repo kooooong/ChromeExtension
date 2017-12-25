@@ -154,6 +154,8 @@ function test() {
 	if (!url || url == "") {
 		return;
 	}
-	var bg = chrome.extension.getBackgroundPage();
-	bg.addBlockUrl(url);
+
+	LocalStorageManager.addUrl(url);
+
+	window.close();
 }

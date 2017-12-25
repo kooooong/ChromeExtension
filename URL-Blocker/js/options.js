@@ -1,16 +1,8 @@
-﻿
-var BLOCK_URLS_KEY = "BlockUrls";
-
+﻿/**
+ *
+ */
 function initUrlItems() {
-    var save = localStorage.getItem(BLOCK_URLS_KEY);
-    if (!save || save == '') {
-        return;
-    }
-
-    var urls = JSON.parse(save);
-    if (!$.isArray(urls)) {
-        urls = [].concat(urls);
-    }
+    var urls = LocalStorageManager.getAllBlockUrls();
 
     var list_str = '';
     for (var key in urls) {
@@ -23,7 +15,7 @@ function initUrlItems() {
             continue;
         }
 
-        list_str += addItem(val);
+        list_str += getItemHtml(val);
     }
     $listContainer.append(list_str);
 
@@ -122,8 +114,7 @@ var $listContainer = $("ul#urlList");
 var $urlFilter = $("input#url-filter");
 var $deleteSelected = $("input#delete-selected");
 
-init();
-function addItem(val) {
+function getItemHtml(val) {
     var ret = '';
     ret += '<li class="url-item">';
 
@@ -144,10 +135,37 @@ function deleteItem(event) {
     var url = $this.prev().text();
     console.log($this);
     alert("delete" + url);
+    $this.remove();
 
-    var bg = chrome.extension.getBackgroundPage();
-    bg.deleteUrl(url);
+    // var bg = chrome.extension.getBackgroundPage();
+    // bg.deleteUrl(url);
+    LocalStorageManager.deleteUrl(url);
     return true;
 }
+
+function onBlockUrlsChange(urls) {
+    initUrlItems();
+    var filterStr = $urlFilter.val();
+    if (!filterStr || filterStr === "") {
+        return;
+    }
+    $urlFilter.trigger("keyup");
+}
+
+/**
+ *
+ * @param {MessageEvent} messageEvent
+ */
+function onMessage(messageEvent) {
+    $listContainer.html("");
+    var data = messageEvent.data;
+    if (data.type === LocalStorageManager.BLOCK_URLS_CHANGE_NOTIFY) {
+        var urls = data.data;
+        onBlockUrlsChange(urls)
+    } else {
+        // do nothing
+    }
+}
+window.addEventListener("message", onMessage);
 
 init();

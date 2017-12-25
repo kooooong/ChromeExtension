@@ -349,37 +349,51 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 //        ["blocking", "requestHeaders"]
 //    );
 //}
-var BLOCK_URLS_KEY = "BlockUrls";
 function initBlockUrl() {
-    var save = localStorage.getItem(BLOCK_URLS_KEY);
-    var obj = JSON.parse(save);
-    if (!obj) {
-        return;
-    }
-    if ($.isArray(obj)) {
-        blockUrls = [];
-        blockUrls = blockUrls.concat(obj);
-    } else {
-        blockUrls = [];
-        blockUrls.push(obj);
-    }
-}
-//noinspection JSUnusedGlobalSymbols
-function addBlockUrl(url) {
-    console.log(url);
-    blockUrls.push(url);
-    var save = JSON.stringify(blockUrls);
-    localStorage.setItem(BLOCK_URLS_KEY, save);
+    // var save = localStorage.getItem(BLOCK_URLS_KEY);
+    // var obj = JSON.parse(save);
+    // if (!obj) {
+    //     return;
+    // }
+    // if ($.isArray(obj)) {
+    //     blockUrls = [];
+    //     blockUrls = blockUrls.concat(obj);
+    // } else {
+    //     blockUrls = [];
+    //     blockUrls.push(obj);
+    // }
+    blockUrls = LocalStorageManager.getAllBlockUrls();
 }
 
-function deleteUrl(url) {
-    if (!url) {
-        return;
-    }
-    var index = blockUrls.indexOf(url);
-    if (index !== -1) {
-        blockUrls.splice(index, 1);
-        localStorage.setItem(BLOCK_URLS_KEY, JSON.stringify(blockUrls));
+// function deleteUrl(url) {
+//     if (!url) {
+//         return;
+//     }
+//     var index = blockUrls.indexOf(url);
+//     if (index !== -1) {
+//         blockUrls.splice(index, 1);
+//         localStorage.setItem(BLOCK_URLS_KEY, JSON.stringify(blockUrls));
+//     }
+// }
+initBlockUrl();
+
+function onBlockUrlsChange(data) {
+    if (data instanceof Array) {
+        blockUrls = [].concat(data);
+    } else {
+        blockUrls = [].push(data);
     }
 }
-initBlockUrl();
+
+/**
+ *
+ * @param {MessageEvent} messageEvent
+ */
+function onMessage(messageEvent) {
+    var data = messageEvent.data;
+    var type = data.type;
+    if (type === LocalStorageManager.BLOCK_URLS_CHANGE_NOTIFY) {
+        onBlockUrlsChange(data.data);
+    }
+}
+window.addEventListener("message", onMessage);

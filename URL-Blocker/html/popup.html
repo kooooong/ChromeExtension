@@ -1,29 +1,36 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Task List</title>
-    <link rel="Stylesheet" href="../css/popup.css" />
+    <link rel="Stylesheet" href="../css/popup.css"/>
     <script type="text/javascript" src="../js/jquery-1.7.2.min.js" charset="utf-8"></script>
 </head>
 <body>
-    <div id="main">
-        <div id="test">
-            <label for="inputPattern">Pattern</label>
+<div id="main">
+    <div id="test">
+        <div>
+            <label for="inputPattern">Pattern:</label>
             <select id="inputPattern">
                 <option value="1" title="Domain">Domain Name</option>
                 <option value="2" title="Keyword">Keyword Name</option>
             </select>
-            <label for="inputUrl">URL</label><input type="text" value="url" id="inputUrl"/>
-            <input type="button" value="Test" id="tb"/>
         </div>
-        <div id="sample">
-            <div id="addItemDiv">添加新项</div>
-            <div id="addItemInput" class="hide">
-                <label for="txtTaskTitle">Title</label><input type="text" id="txtTaskTitle" /></div>
-            <div id="taskItemList"></div>
+        <div>
+            <label>URL:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="inputUrl" placeholder="Input the URL to block."
+                                                      title="input" id="inputUrl"/></label>
         </div>
+        <input type="button" value="Add" id="tb"/>
     </div>
-    <script type="text/javascript" src="../js/popup.js"></script>
+    <div id="sample">
+        <div id="addItemDiv">添加新项</div>
+        <div id="addItemInput" class="hide">
+            <label for="txtTaskTitle">Title</label><input type="text" id="txtTaskTitle"/></div>
+        <div id="taskItemList"></div>
+    </div>
+</div>
+<script type="text/javascript" src="../js/LocalStorageManager.js"></script>
+<script type="text/javascript" src="../js/popup.js"></script>
 </body>
 </html>

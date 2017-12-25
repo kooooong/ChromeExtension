@@ -53,3 +53,7 @@ label.off {
     height: 12px;
     background: url(../images/bg_task_off.gif) no-repeat 0 2px;
 }
+
+#sample {
+    display: none;
+}

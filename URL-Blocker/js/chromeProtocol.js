@@ -125,6 +125,9 @@ chrome.extension.__proto__.getBackgroundPage = function () {
 };
 chrome.extension.__proto__.getURL = function () {
 };
+/**
+ * @return {[Window]}
+ */
 chrome.extension.__proto__.getViews = function () {
 };
 chrome.extension.__proto__.isAllowedFileSchemeAccess = function () {
