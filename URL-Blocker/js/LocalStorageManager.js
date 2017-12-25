@@ -11,6 +11,15 @@
 var LocalStorageManager = {
     BLOCK_URLS_CHANGE_NOTIFY: "BlockUrlsChangeNotify",
     BLOCK_URLS_KEY: "BlockUrls",
+    TOGGLE_BLOCK_KEY: "ToggleBlock",
+    TOGGLE_CHANGE_NOTIFY: "ToggleChanged",
+    getToggleBlock : function() {
+        var str = localStorage.getItem(this.TOGGLE_BLOCK_KEY);
+        if (!str || str === "false") {
+            return false;
+        }
+        return true;
+    },
     addUrl: function(url) {
         var allUrl = this.getAllBlockUrls();
         allUrl.push(url);
@@ -20,13 +29,16 @@ var LocalStorageManager = {
         this.notifyBlockUrlsChange(allUrl);
     },
     notifyBlockUrlsChange: function(allUrls) {
+        var data = { type: this.BLOCK_URLS_CHANGE_NOTIFY, data: allUrls};
+        this.notifyAllViews(data);
+    },
+    notifyAllViews: function(data) {
         // notify to all views
         var views = chrome.extension.getViews();
         for (var i = 0; i < views.length; i++) {
             var v = views[i];
-            v.postMessage({ type: this.BLOCK_URLS_CHANGE_NOTIFY, data: allUrls}, "*");
+            v.postMessage(data, "*");
         }
-
     },
     deleteUrl: function(url) {
         var allUrl = this.getAllBlockUrls();
@@ -46,5 +58,20 @@ var LocalStorageManager = {
         }
         ret = (JSON).parse(str);
         return ret;
+    },
+    notifyToggleChanged: function(toggle) {
+        var data = {type: this.TOGGLE_CHANGE_NOTIFY, data: toggle};
+        this.notifyAllViews(data);
+    },
+    toggleBlock: function() {
+        var cur = this.getToggleBlock();
+        cur = !cur;
+        localStorage.setItem(this.TOGGLE_BLOCK_KEY, cur);
+        this.notifyToggleChanged(cur);
+        if (cur) {
+            chrome.browserAction.setIcon({path: '../images/icon.png'});
+        } else {
+            chrome.browserAction.setIcon({path: '../images/gray.png'});
+        }
     }
 };

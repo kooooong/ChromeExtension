@@ -220,6 +220,9 @@ chrome.webRequest.onBeforeRequest.addListener(
      * @returns {*}
      */
     function (details) {
+        if (!toggle) {
+            return;
+        }
         //var url = details.url;
         //console.log(url);
         ////通过匹配测试一个请求
@@ -365,6 +368,11 @@ function initBlockUrl() {
     blockUrls = LocalStorageManager.getAllBlockUrls();
 }
 
+var toggle = false;
+function initToggle() {
+    toggle = LocalStorageManager.getToggleBlock();
+}
+
 // function deleteUrl(url) {
 //     if (!url) {
 //         return;
@@ -376,6 +384,7 @@ function initBlockUrl() {
 //     }
 // }
 initBlockUrl();
+initToggle();
 
 function onBlockUrlsChange(data) {
     if (data instanceof Array) {
@@ -394,6 +403,8 @@ function onMessage(messageEvent) {
     var type = data.type;
     if (type === LocalStorageManager.BLOCK_URLS_CHANGE_NOTIFY) {
         onBlockUrlsChange(data.data);
+    } else if (type === LocalStorageManager.TOGGLE_CHANGE_NOTIFY) {
+        toggle = data.data;
     }
 }
 window.addEventListener("message", onMessage);

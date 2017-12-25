@@ -134,6 +134,15 @@
 })();
 
 $("#tb").on("click", test);
+$("#toggleBlock").on("click", toggleBlock);
+function toggleBlock() {
+	LocalStorageManager.toggleBlock();
+
+	setTimeout(function() {
+		window.close();
+	}, 10);
+	// window.close();
+}
 function getBlockStr() {
 	var url = $("#inputUrl").val();
 	var ret = "";
