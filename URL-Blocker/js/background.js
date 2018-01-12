@@ -353,38 +353,14 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 //    );
 //}
 function initBlockUrl() {
-    // var save = localStorage.getItem(BLOCK_URLS_KEY);
-    // var obj = JSON.parse(save);
-    // if (!obj) {
-    //     return;
-    // }
-    // if ($.isArray(obj)) {
-    //     blockUrls = [];
-    //     blockUrls = blockUrls.concat(obj);
-    // } else {
-    //     blockUrls = [];
-    //     blockUrls.push(obj);
-    // }
     blockUrls = LocalStorageManager.getAllBlockUrls();
 }
 
-var toggle = false;
+var toggle = undefined;
 function initToggle() {
-    toggle = LocalStorageManager.getToggleBlock();
+    var tmp = LocalStorageManager.getToggleBlock();
+    setToggle(tmp);
 }
-
-// function deleteUrl(url) {
-//     if (!url) {
-//         return;
-//     }
-//     var index = blockUrls.indexOf(url);
-//     if (index !== -1) {
-//         blockUrls.splice(index, 1);
-//         localStorage.setItem(BLOCK_URLS_KEY, JSON.stringify(blockUrls));
-//     }
-// }
-initBlockUrl();
-initToggle();
 
 function onBlockUrlsChange(data) {
     if (data instanceof Array) {
@@ -404,7 +380,28 @@ function onMessage(messageEvent) {
     if (type === LocalStorageManager.BLOCK_URLS_CHANGE_NOTIFY) {
         onBlockUrlsChange(data.data);
     } else if (type === LocalStorageManager.TOGGLE_CHANGE_NOTIFY) {
-        toggle = data.data;
+        setToggle(data.data);
     }
 }
-window.addEventListener("message", onMessage);
+
+function setToggle(cur) {
+    if (toggle === cur) {
+        return;
+    }
+    toggle = cur;
+    if (cur) {
+        chrome.browserAction.setIcon({path: '../images/icon.png'});
+    } else {
+        chrome.browserAction.setIcon({path: '../images/gray.png'});
+    }
+}
+
+function init() {
+    initBlockUrl();
+    initToggle();
+    window.addEventListener("message", onMessage);
+}
+
+$(document).ready(function() {
+    init();
+});

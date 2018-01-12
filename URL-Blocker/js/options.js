@@ -49,7 +49,7 @@ function deleteSelectedHandler() {
 }
 
 function deleteAllHandler() {
-    alert($(this).val());
+    LocalStorageManager.restoreAllBlockUrls([]);
 }
 
 function selectAllHandler() {
@@ -67,11 +67,32 @@ function reverseSelectHandler() {
 }
 
 function importHandler() {
-    alert($(this).val());
+    // alert($(this).val());
+    $("#importFromFile").click();
+}
+
+function importFromFileHandler() {
+    // alert("AHH");
+    var file = $("#importFromFile")[0];
+    if (file.files.length > 0 && file.files[0].name.length > 0) {
+        var r = new FileReader();
+        r.onload = function (e) {
+            var urlsStr = e.target.result;
+            LocalStorageManager.restoreAllBlockUrls(urlsStr);
+        };
+        r.onerror = function () {
+            alert("onerror");
+        };
+        r.readAsText(file.files[0], "utf-8");
+        file.value = "";
+    }
 }
 
 function exportHandler() {
-    alert($(this).val());
+    // alert($(this).val());
+    var allUrls = LocalStorageManager.getAllBlockUrls();
+    var data = JSON.stringify(allUrls);
+    saveFileAs("url_blocker_urls.json", data);
 }
 
 function initOperates() {
@@ -98,6 +119,10 @@ function initOperates() {
     // import
     var $import = $("#import");
     $import.off().on("click", importHandler);
+
+    // importFromFile (import helper)
+    var $importFromFile = $("#importFromFile");
+    $importFromFile.on("change", importFromFileHandler);
 
     // export
     var $export = $("#export");
@@ -143,6 +168,36 @@ function deleteItem(event) {
     return true;
 }
 
+function saveFileAs(fileName, fileData) {
+    try {
+        var Blob = window.Blob || window.WebKitBlob;
+
+        // Detect availability of the Blob constructor.
+        var constructor_supported = false;
+        if (Blob) {
+            try {
+                new Blob([], { "type" : "text/plain" });
+                constructor_supported = true;
+            } catch (_) { }
+        }
+
+        var b = null;
+        if (constructor_supported) {
+            b = new Blob([fileData], { "type" : "text/plain" });
+        } else {
+            // Deprecated BlobBuilder API
+            var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder;
+            var bb = new BlobBuilder();
+            bb.append(fileData);
+            b = bb.getBlob("text/plain");
+        }
+
+        saveAs(b, fileName);
+    } catch (e) {
+        console.error("Oops! Can't save generated file, " + e.toString());
+    }
+}
+
 function onBlockUrlsChange(urls) {
     initUrlItems();
     var filterStr = $urlFilter.val();
@@ -169,3 +224,5 @@ function onMessage(messageEvent) {
 window.addEventListener("message", onMessage);
 
 init();
+
+

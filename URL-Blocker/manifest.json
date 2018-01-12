@@ -4,7 +4,7 @@
   "version": "0.9.0",
   "description": "Block the URLs by specified pattern.",
   "browser_action": {
-    "default_icon": "images/icon.png",
+    "default_icon": "images/gray.png",
     "default_title": "URL-Blocker",
     "default_popup": "html/popup.html"
   },

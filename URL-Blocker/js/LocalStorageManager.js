@@ -15,10 +15,7 @@ var LocalStorageManager = {
     TOGGLE_CHANGE_NOTIFY: "ToggleChanged",
     getToggleBlock : function() {
         var str = localStorage.getItem(this.TOGGLE_BLOCK_KEY);
-        if (!str || str === "false") {
-            return false;
-        }
-        return true;
+        return !(!str || str === "false");
     },
     addUrl: function(url) {
         var allUrl = this.getAllBlockUrls();
@@ -59,6 +56,17 @@ var LocalStorageManager = {
         ret = (JSON).parse(str);
         return ret;
     },
+    restoreAllBlockUrls: function (urlsStr) {
+        if (!urlsStr) {
+            return;
+        }
+        var urls = JSON.parse(urlsStr);
+        if (!urls || !(urls instanceof Array)) {
+            return;
+        }
+        localStorage.setItem(this.BLOCK_URLS_KEY, urlsStr);
+        this.notifyBlockUrlsChange(urls);
+    },
     notifyToggleChanged: function(toggle) {
         var data = {type: this.TOGGLE_CHANGE_NOTIFY, data: toggle};
         this.notifyAllViews(data);
@@ -68,10 +76,5 @@ var LocalStorageManager = {
         cur = !cur;
         localStorage.setItem(this.TOGGLE_BLOCK_KEY, cur);
         this.notifyToggleChanged(cur);
-        if (cur) {
-            chrome.browserAction.setIcon({path: '../images/icon.png'});
-        } else {
-            chrome.browserAction.setIcon({path: '../images/gray.png'});
-        }
     }
 };

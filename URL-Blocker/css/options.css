@@ -26,6 +26,10 @@ div.url-item-delete {
     background-color: #dbdbdb;
 }
 
+input#importFromFile {
+    display: none;
+}
+
 div#urlListDiv {
     overflow: auto;
     height: 600px;
